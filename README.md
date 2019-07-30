@@ -112,3 +112,10 @@ $ dotnet run
 
 # Pasing model to view
 * https://www.tutorialsteacher.com/mvc/mvc-view
+
+@foreach (Item item in Model)
+  {
+    <li> 
+      @Html.DisplayFor(modelItem => item.Description)
+    </li>
+  }

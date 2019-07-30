@@ -3,8 +3,7 @@
 -----
 
 ## Description
-* Project template for C# Web Apps
-* Unit testing set up too
+* To Do List C# Web App
 
 ## Technologies Used
 * C#

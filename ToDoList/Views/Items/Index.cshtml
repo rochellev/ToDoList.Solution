@@ -1,0 +1,10 @@
+<h1>To Do List</h1>
+@using ToDoList.Models;
+<ul>
+  @foreach (Item item in Model)
+  {
+      <li>@Html.DisplayFor(modelItem => item.Description)</li>
+  }
+  
+</ul>
+<a href="/items/new"> Add a new Item.</a>

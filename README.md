@@ -109,3 +109,6 @@ $ dotnet run
 * [HttpPost("route-name)] for POST
 
 * the browser receives the response from the server, it then renders the HTML into a viewable format for the user.
+
+# Pasing model to view
+* https://www.tutorialsteacher.com/mvc/mvc-view

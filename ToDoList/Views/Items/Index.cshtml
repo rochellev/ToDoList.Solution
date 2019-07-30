@@ -10,7 +10,9 @@
   @foreach(Item item in Model)
   {
     <li>
-      @item.Description
+      <a href="/items/@item.Id">
+        @item.Description
+      </a>
     </li>
   }
 

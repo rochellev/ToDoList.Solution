@@ -45,6 +45,7 @@ namespace ToDoList.Controllers
             Dictionary<string, object> model = new Dictionary<string, object>();
             Category foundCategory = Category.Find(categoryId);
             Item newItem = new Item(itemDescription);
+            newItem.Save();    // New code
             foundCategory.AddItem(newItem);
             List<Item> categoryItems = foundCategory.Items;
             model.Add("items", categoryItems);
@@ -52,7 +53,6 @@ namespace ToDoList.Controllers
             return View("Show", model);
         }
 
-        
 
 
 

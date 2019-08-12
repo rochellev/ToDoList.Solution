@@ -1,5 +1,3 @@
-// class to hold info about the relationship between Category and Item
-// Entity use this to create Join TAble
 namespace ToDoList.Models
 {
   public class CategoryItem

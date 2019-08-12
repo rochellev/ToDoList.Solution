@@ -57,6 +57,7 @@
   * executes the route's code
 
 # better annotaton for defining the routes
+
 * [HttpGet("route-name")] for GET
 * [HttpPost("route-name)] for POST
 
@@ -74,6 +75,11 @@
 
 
 # Migrations Section
+
+* CategoryItem model
+  * class to hold info about the relationship between Category and Item
+  * Entity use this to create Join TAble
+
 * Each DbSet in context class becomes a table (entity does this)
 
 * design time -- need database before run time
@@ -87,3 +93,25 @@
 
 * dotnet ef database update
   * command to apply migration
+
+----
+
+```c++
+public ActionResult Details(int id)
+{
+    var thisItem = _db.Items // gives us list of Item objects in database
+        .Include(item => item.Categories) 
+        .ThenInclude(join => join.Category)
+        .FirstOrDefault(item => item.ItemId == id);
+    return View(thisItem);
+}
+```
+
+
+* ItemsController.cs   (the above code)
+  * inlcude -- get categories property for each item
+  * but Categories property is actually a collection of join entities --- not ACTUAL categories
+  * since need actual categories, use ThenInclude() method to load the Category of each CategoryItem
+  * CategotyItem is reference to a relationship
+  * returning the associated category of a category Item
+  * FirstOrDefault() method specifies which items from the database we are working with 

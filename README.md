@@ -13,12 +13,14 @@
 * MSTest
 
 ## Installation
-* Clone project repo
-* From the project's root directory, open console and type dotnet run
+* Follow steps below
+* Go to http://localhost:5000
+
 
 ```sh
-$ git clone 
-$ cd  
+$ git clone https://github.com/rochellev/ToDoList.Solution.git
+$ cd  .\ToDoList.Solution\ToDoList
+$ dotnet restore
 $ dotnet run
 ```
 

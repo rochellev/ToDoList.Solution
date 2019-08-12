@@ -11,7 +11,8 @@ namespace ToDoList.Models
 
         public int ItemId { get; set; }
         public string Description { get; set; }
+        public bool Completed { get; set; }
         // collection navigation property
-        public ICollection<CategoryItem> Categories { get;}
+        public ICollection<CategoryItem> Categories { get; }
     }
 }

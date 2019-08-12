@@ -95,6 +95,12 @@
   * command to apply migration
   * do this command when you change the models
 
+* update database (adding a column)
+  * add property to your model then in console type:
+```sh
+  dotnet ef migrations add <your migration name>
+  dotnet ef database update
+```
 ----
 
 ```c#
@@ -120,3 +126,8 @@ public ActionResult Details(int id)
   * Deleting
     * cascade delete
     * Entity automatically remove entries in the join table when we delete an entity
+
+
+# User Authendication
+* Identity
+  

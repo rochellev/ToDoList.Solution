@@ -115,3 +115,7 @@ public ActionResult Details(int id)
   * CategotyItem is reference to a relationship
   * returning the associated category of a category Item
   * FirstOrDefault() method specifies which items from the database we are working with 
+
+  * Deleting
+    * cascade delete
+    * Entity automatically remove entries in the join table when we delete an entity

@@ -1,1 +1,5 @@
 /* styles will go here! */
+
+.taskDone {
+    text-decoration: line-through;
+}

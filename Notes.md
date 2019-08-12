@@ -85,7 +85,7 @@
 * design time -- need database before run time
   * time when we are actually writing and designing our code
 
-
+## Building the database
 * dotnet ef migrations add Initial
   * run this at root of project directory
   * creates a Migrations folder in root directory
@@ -93,10 +93,11 @@
 
 * dotnet ef database update
   * command to apply migration
+  * do this command when you change the models
 
 ----
 
-```c++
+```c#
 public ActionResult Details(int id)
 {
     var thisItem = _db.Items // gives us list of Item objects in database

@@ -1,18 +1,16 @@
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ToDoList.Models
 {
+    [Table("Items")]
     public class Item
     {
-        public Item()
-        {
-            this.Categories = new HashSet<CategoryItem>();
-        }
-
+        [Key]
         public int ItemId { get; set; }
+        public int Id { get; set; }
         public string Description { get; set; }
-        public bool Completed { get; set; }
-        // collection navigation property
-        public ICollection<CategoryItem> Categories { get; }
+        // allow entity to lazy load
+        public virtual ApplicationUser User { get; set; }
     }
 }

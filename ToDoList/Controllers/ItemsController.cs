@@ -1,24 +1,32 @@
-using Microsoft.AspNetCore.Mvc;
-using ToDoList.Models;
-using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using ToDoList.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace ToDoList.Controllers
 {
+    [Authorize]
     public class ItemsController : Controller
     {
         private readonly ToDoListContext _db;
-
-        public ItemsController(ToDoListContext db)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ItemsController(UserManager<ApplicationUser> userManager, ToDoListContext database)
         {
-            _db = db;
+          _userManager = userManager;
+          _db = database;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(_db.Items.ToList());
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUser = await _userManager.FindByIdAsync(userId);
+            // only show items associated with the current user, query Entity
+            return View(_db.Items.Where(x => x.User.Id == currentUser.Id));
         }
 
         public ActionResult Create()
@@ -28,85 +36,85 @@ namespace ToDoList.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Item item, int CategoryId)
+        public async Task<ActionResult> Create(Item item)
         {
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUser = await _userManager.FindByIdAsync(userId);
+            // associate item with user then save in database
+            item.User = currentUser;
             _db.Items.Add(item);
-            if (CategoryId != 0)
-            {
-                _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
-            }
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        public ActionResult Details(int id)
-        {
-            var thisItem = _db.Items
-            .Include(item => item.Categories)
-            .ThenInclude(join => join.Category)
-            .FirstOrDefault(item => item.ItemId == id);
-            return View(thisItem);
-        }
+        // public ActionResult Details(int id)
+        // {
+        //     var thisItem = _db.Items
+        //     .Include(item => item.Categories)
+        //     .ThenInclude(join => join.Category)
+        //     .FirstOrDefault(item => item.ItemId == id);
+        //     return View(thisItem);
+        // }
 
-        public ActionResult Edit(int id)
-        {
-            var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-            ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-            return View(thisItem);
-        }
+        // public ActionResult Edit(int id)
+        // {
+        //     var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+        //     ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+        //     return View(thisItem);
+        // }
 
-        [HttpPost]
-        public ActionResult Edit(Item item, int CategoryId)
-        {
-            if (CategoryId != 0)
-            {
-                _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
-            }
-            _db.Entry(item).State = EntityState.Modified;
-            _db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        // [HttpPost]
+        // public ActionResult Edit(Item item, int CategoryId)
+        // {
+        //     if (CategoryId != 0)
+        //     {
+        //         _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+        //     }
+        //     _db.Entry(item).State = EntityState.Modified;
+        //     _db.SaveChanges();
+        //     return RedirectToAction("Index");
+        // }
 
-        public ActionResult AddCategory(int id)
-        {
-            var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-            ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-            return View(thisItem);
-        }
+        // public ActionResult AddCategory(int id)
+        // {
+        //     var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+        //     ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+        //     return View(thisItem);
+        // }
 
-        [HttpPost]
-        public ActionResult AddCategory(Item item, int CategoryId)
-        {
-            if (CategoryId != 0)
-            {
-                _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
-            }
-            _db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        // [HttpPost]
+        // public ActionResult AddCategory(Item item, int CategoryId)
+        // {
+        //     if (CategoryId != 0)
+        //     {
+        //         _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+        //     }
+        //     _db.SaveChanges();
+        //     return RedirectToAction("Index");
+        // }
 
-        public ActionResult Delete(int id)
-        {
-            var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-            return View(thisItem);
-        }
+        // public ActionResult Delete(int id)
+        // {
+        //     var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+        //     return View(thisItem);
+        // }
 
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-            _db.Items.Remove(thisItem);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        // [HttpPost, ActionName("Delete")]
+        // public ActionResult DeleteConfirmed(int id)
+        // {
+        //     var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+        //     _db.Items.Remove(thisItem);
+        //     _db.SaveChanges();
+        //     return RedirectToAction("Index");
+        // }
 
-        [HttpPost]
-        public ActionResult DeleteCategory(int joinId)
-        {
-            var joinEntry = _db.CategoryItem.FirstOrDefault(entry => entry.CategoryItemId == joinId);
-            _db.CategoryItem.Remove(joinEntry);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        // [HttpPost]
+        // public ActionResult DeleteCategory(int joinId)
+        // {
+        //     var joinEntry = _db.CategoryItem.FirstOrDefault(entry => entry.CategoryItemId == joinId);
+        //     _db.CategoryItem.Remove(joinEntry);
+        //     _db.SaveChanges();
+        //     return RedirectToAction("Index");
+        // }
     }
 }
